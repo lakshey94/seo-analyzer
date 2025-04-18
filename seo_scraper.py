@@ -36,7 +36,7 @@ def extract_seo_features(url, keyword):
         word_count = len(words)
 
         keyword_count = text.lower().count(keyword.lower())
-        keyword_density = (keyword_count / word_count) * 100 if word_count else 0
+        avg_word_count = sum(d["word_count"] for d in competitors_data) / len(competitors_data)
 
         headings = {
             'h1': len(soup.find_all('h1')),
