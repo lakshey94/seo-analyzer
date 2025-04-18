@@ -34,12 +34,9 @@ def extract_seo_features(url, keyword):
         text = soup.get_text(separator=' ')
         words = text.split()
         word_count = len(words)
-        if word_count == 0:
-    raise ValueError(f"No content extracted from {url}")
-
 
         keyword_count = text.lower().count(keyword.lower())
-        avg_word_count = sum(d["word_count"] for d in competitors_data) / len(competitors_data)
+        keyword_density = (keyword_count / word_count) * 100 if word_count else 0
 
         headings = {
             'h1': len(soup.find_all('h1')),
@@ -76,14 +73,8 @@ def extract_seo_features(url, keyword):
 
 # Scoring system
 def score_seo_content(your_data, competitors_data):
-    # Filter out broken competitor results
-    valid_competitors = [d for d in competitors_data if "word_count" in d and d["word_count"] > 0]
-
-    if not valid_competitors:
-        raise ValueError("No valid competitor content found. Unable to calculate benchmark.")
-
-    avg_word_count = sum(d["word_count"] for d in valid_competitors) / len(valid_competitors)
-    avg_internal_links = sum(d["internal_links"] for d in valid_competitors) / len(valid_competitors)
+    avg_word_count = sum(d["word_count"] for d in competitors_data) / len(competitors_data)
+    avg_internal_links = sum(d["internal_links"] for d in competitors_data) / len(competitors_data)
 
     score = 0
     report = []
@@ -95,8 +86,6 @@ def score_seo_content(your_data, competitors_data):
         diff = avg_word_count - your_data["word_count"]
         score += max(0, 20 - int((diff / avg_word_count) * 20))
         report.append(f"📌 Word count is below average ({your_data['word_count']} vs {int(avg_word_count)}).")
-if word_count == 0:
-    raise ValueError(f"No content extracted from {url}")
 
     # Keyword Density
     kd = your_data["keyword_density"]
